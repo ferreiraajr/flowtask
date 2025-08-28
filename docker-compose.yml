@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: laravel/app
-    container_name: laravel-app
+    container_name: flowtask-app
     tty: true
     environment:
       SERVICE_NAME: app
@@ -16,12 +16,12 @@ services:
       - ./docker_config_files/php/local.ini:/usr/local/etc/php/conf.d/local.ini:delegated
       - ~/.composer/docker-cache/:/root/.composer:cached
     networks:
-      - laravel-networks
+      - flowtask-networks
 
   # Nginx Service
   webserver:
     image: nginx:alpine
-    container_name: laravel-webserver
+    container_name: flowtask-webserver
     tty: true
     ports:
       - "80:80"
@@ -30,14 +30,14 @@ services:
       - ./:/var/www:delegated
       - ./docker_config_files/nginx/conf.d/:/etc/nginx/conf.d/:delegated
     networks:
-      - laravel-networks
+      - flowtask-networks
     depends_on:
       - postgres
       - app
 
   # Postgres Service
   postgres:
-    container_name: laravel-postgres
+    container_name: flowtask-postgres
     image: postgres:latest
     environment:
       POSTGRES_DB: ${DB_DATABASE}
@@ -49,21 +49,21 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - laravel-networks
+      - flowtask-networks
 
   # PgAdmin
   pgadmin:
-    container_name: laravel-pgadmin
+    container_name: flowtask-pgadmin
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@uema.br
+      PGADMIN_DEFAULT_EMAIL: admin@flowtask.br
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin:/root/.pgadmin
     ports:
       - "8080:80"
     networks:
-      - laravel-networks
+      - flowtask-networks
     depends_on:
       - postgres
 
@@ -72,32 +72,32 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-composer
-    container_name: laravel-composer
+    container_name: flowtask-composer
     volumes:
       - ./:/var/www/
     working_dir: /var/www/
     depends_on:
       - app
     networks:
-      - laravel-networks
+      - flowtask-networks
 
   # NPM
   npm:
     image: node:18
-    container_name: laravel-npm
+    container_name: flowtask-npm
     volumes:
       - ./:/var/www/
     working_dir: /var/www/
     entrypoint: [ "npm" ]
     networks:
-      - laravel-networks
+      - flowtask-networks
 
   # Artisan
   artisan:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel-artisan
+    container_name: flowtask-artisan
     volumes:
       - ./:/var/www
     depends_on:
@@ -105,11 +105,11 @@ services:
     working_dir: /var/www/
     entrypoint: [ "php", "/var/www/artisan" ]
     networks:
-      - laravel-networks
+      - flowtask-networks
 
 # Docker Networks
 networks:
-  laravel-networks:
+  flowtask-networks:
     driver: bridge
 
 # Volumes
