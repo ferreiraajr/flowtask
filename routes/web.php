@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\Workspace\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
