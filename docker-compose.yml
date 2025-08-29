@@ -83,7 +83,7 @@ services:
 
   # NPM
   npm:
-    image: node:18
+    image: node:20
     container_name: flowtask-npm
     volumes:
       - ./:/var/www/
